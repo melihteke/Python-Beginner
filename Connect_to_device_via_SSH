@@ -1,0 +1,22 @@
+#This code is used to have an SSH access to a device.
+#mely@mely:~$ python
+#Python 2.7.14 (default, Sep 23 2017, 22:06:14)
+#[GCC 7.2.0] on linux2
+#Type "help", "copyright", "credits" or "license" for more information.
+#Paramiko does not work with Python 3.6.3. I do not know the reason yet.
+
+
+#import re
+#import time
+import paramiko
+#import os
+#import sys
+
+ssh = paramiko.SSHClient()
+ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())               
+ssh.connect('192.168.1.7', port=22, username='USERNAME', password='PASSWORD')
+
+
+stdin, stdout, stderr = ssh.exec_command('ifconfig | more')
+output = stdout.readlines()
+print '' .join(output)
