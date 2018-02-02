@@ -1,3 +1,4 @@
+
 import os,re,telnetlib
 host = "192.168.1.53"
 port = 32770
@@ -7,8 +8,15 @@ telnet.open(host, port)
 telnet.write('admin\r\n')
 telnet.write('admin\r\n')
 out = telnet.read_until("DB>", 5)
-telnet.write('show card\r\n') #Mycommand
+telnet.write('environment no more\r\n')
+telnet.write('configure card 1 card-type iom3-xp-b\r\n') 
+telnet.write('configure card 1 mda 1 mda-type m5-1gb-sfp-b\r\n') 
+
+telnet.write('show port\r\n') 
 out = telnet.read_until("DB>", 5)
-telnet.write('quit\r\n')
-telnet.close()
+
+telnet.write('show router route-table\r\n') 
+out = telnet.read_until("DB>", 5)
+
 print(out)
+telnet.close()
