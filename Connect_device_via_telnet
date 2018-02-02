@@ -1,0 +1,14 @@
+import os,re,telnetlib
+host = "192.168.1.53"
+port = 32770
+
+telnet = telnetlib.Telnet()
+telnet.open(host, port)
+telnet.write('admin\r\n')
+telnet.write('admin\r\n')
+out = telnet.read_until("DB>", 5)
+telnet.write('show card\r\n') #Mycommand
+out = telnet.read_until("DB>", 5)
+telnet.write('quit\r\n')
+telnet.close()
+print(out)
