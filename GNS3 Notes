@@ -1,0 +1,32 @@
+GNS3 Notes:
+------------------------------------------------
+1) Netmiko is not installed on Network automation container
+
+	1a)install below packages
+	apt update && apt upgrade
+	apt install build-essential
+	apt install python3.5
+	apt install python3.5-dev
+	apt install python3.5-venv
+	apt install wget
+	wget https://bootstrap.pypa.io/get-pip.py
+	python3.5 get-pip.py
+	pip3 install netmiko
+
+
+	1b) reboot Network Auto Container
+
+	1c) Install below packages
+	apt-get update
+	apt-get install python3-pip
+	pip3 install -U netmiko
+
+
+	1d) Change owner of the ssh config file
+	chown root ~/.ssh/config
+
+
+2) Network Automation Container DHCP configuration
+
+nano /etc/network/interface
+remove 2 #s
