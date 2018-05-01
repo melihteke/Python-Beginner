@@ -1,0 +1,40 @@
+# NOTE:
+# Multiple Switch creating vlans with 2 time loops (Nested Loop) ip address and VLANs were Looped.
+
+import getpass
+import telnetlib
+
+#ASKING CREDENTIALS--
+HOST = "localhost"
+user = input("Enter your remote account: ")
+password = getpass.getpass()
+
+# Open file which is  previously  created named as "myswitches"
+# This file needs to be in the same directory within the script we have
+# created.
+
+f = open ("myswitches")
+
+# Start loop according to myswitches file.
+# One by one all the ips have been telnetted  and
+# below commands are set to remote host.
+for IP in f:
+    IP=IP.strip()
+    print ("Configuration Switch " + (IP))
+    HOST = IP
+    tn = telnetlib.Telnet(HOST)
+    tn.read_until(b"Username: ")
+    tn.write(user.encode('ascii') + b"\n")
+    if password:
+        tn.read_until(b"Password: ")
+        tn.write(password.encode('ascii') + b"\n")
+        tn.write(b"conf ter\n")
+ #--------- Create VLAN Loop-------------------
+    for n in range(2,10):
+        tn.write(b"vlan " + str(n).encode('ascii') + b"\n")
+        tn.write(b"name PYT_MLSW_NAME" + str(n).encode('ascii')+ b"\n")
+    
+    tn.write(b"end\n")
+    tn.write(b"exit\n")
+    print(tn.read_all().decode('ascii'))
+# END of the Script.
