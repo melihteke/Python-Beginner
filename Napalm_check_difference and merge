@@ -1,0 +1,51 @@
+import json
+from napalm import get_network_driver
+driver = get_network_driver("ios")
+iosvl2 = driver("192.168.122.123", "melih", "cisco")
+iosvl2.open()
+
+print("Accessing to device now !!!!")
+iosvl2.load_merge_candidate(filename="ACL_LIST.cfg")
+
+diffs = iosvl2.compare_config()
+
+if len(diffs) > 0:
+	print(diffs)
+	iosvl2.commit_config()
+
+else:
+	print("No Changes required on ACL LIST")
+	iosvl2.discard_config()
+
+
+print("Checking OSPF Configuration !!!!")
+iosvl2.load_merge_candidate(filename="ospf.cfg")
+
+diffs = iosvl2.compare_config()
+
+if len(diffs) > 0:
+	print(diffs)
+	iosvl2.commit_config()
+
+else:
+	print("No Changes required on configuration")
+	iosvl2.discard_config()
+iosvl2.close()
+
+
+
+
+#Create  below files within the same directory 
+nano ACL_LIST.cfg
+
+access-list 100 permit ip any host 1.1.1.1
+access-list 100 permit ip any host 2.2.2.2
+access-list 100 permit ip any host 3.3.3.3
+
+
+nano ospf.cfg
+router ospf 1
+network 1.0.0.0 0.255.255.255 area 0
+network 2.0.0.0 0.255.255.255 area 0
+network 3.0.0.0 0.255.255.255 area 0
+network 4.0.0.0 0.255.255.255 area 0
