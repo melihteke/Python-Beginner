@@ -1,0 +1,30 @@
+# 2 Lists were created. 1 is for configuration file, other is list of device
+
+
+from netmiko import ConnectHandler
+
+#Configuration file
+with open("Configuration_OSPF") as f:
+	command_list = f.read().splitlines()
+
+#Device list file
+with open("Device_List") as f:
+	device_list = f.read().splitlines()
+
+
+
+for devices in device_list:
+	print "Connecting to device" + devices
+	ip_address_of_device = devices
+
+    iosv_l2_s3 = {
+        'device_type': 'cisco_ios',
+        'ip': ip_address_of_device,
+        'username': 'melih',
+        'password': 'cisco'
+    }
+
+    net_connect = ConnectHandler(**iosv_l2_s3)
+    output = net_connect.send_config_set(command_list)
+    print(output)
+
