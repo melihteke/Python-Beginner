@@ -1,0 +1,55 @@
+# 2 Lists were created. 1 is for configuration file, other is list of device
+from getpass import getpass
+from netmiko import ConnectHandler
+from netmiko.ssh_exception import NetMikoTimeoutException
+from paramiko.ssh_exception import SSHException
+from netmiko.ssh_exception import AuthenticationException
+
+
+username = raw_input("Pleasenter your SSH Username: ")
+password = getpass()
+
+#Configuration file
+with open("Configuration_OSPF") as f:
+        command_list = f.read().splitlines()
+
+#Device list file
+with open("Device_List") as f:
+        device_list = f.read().splitlines()
+
+
+
+for devices in device_list:
+        print "Connecting to device" + devices
+        ip_address_of_device = devices
+
+        iosv_l2_s3 = {
+            'device_type': 'cisco_ios',
+            'ip': ip_address_of_device,
+            'username': username,
+            'password': password
+        }
+        
+        try:
+        	net_connect = ConnectHandler(**iosv_l2_s3)
+        except (AuthenticationException):
+        	print "Authentication failure: " + ip_address_of_device
+        	continue
+        except (NetMikoTimeoutException):
+        	print " Timeout to device" + ip_address_of_device
+        	continue
+        except (E0FError):
+        	print " End of file while attempting device" + ip_address_of_device
+        	continue
+        except (SSHException):
+        	print "SSH Issue. Are you sue SSH is enabled? " + ip_address_of_device
+        	continue
+        except Exception as unknown_error:
+        	print "Some other error: " + ip_address_of_device
+        	continue
+
+        net_connect = ConnectHandler(**iosv_l2_s3)
+        output = net_connect.send_config_set(command_list)
+        print(output)
+
+
